@@ -26,6 +26,7 @@ public class Controller {
     public Text questionText = new Text();
     public Text showMoney = new Text();
     public Text showQuestionNumber = new Text();
+    public Button startButton;
     int money = 0;
     int questionNumber = 0;
     Button fiftyfifty = new Button();
@@ -35,6 +36,7 @@ public class Controller {
 
 
     public void startGame() {  // Startet das Spiel durch Dr�cken des Startbuttons
+        startButton.setDisable(true);
         File source = new File("./start.mp3");
         Media media = new Media(source.toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
