@@ -77,6 +77,9 @@ public class Controller {
         stopGame.setText("Aufhoeren");
         jokerPane.add(audienceJoker, 0, 1);
         audienceJoker.setText("Publikumsjoker");
+        fiftyfifty.setMinWidth(170);
+        stopGame.setMinWidth(170);
+        audienceJoker.setMinWidth(170);
 
         stopGame.setOnAction(event -> {
             mainPane.getChildren().clear();
@@ -191,6 +194,7 @@ public class Controller {
         for (int answerCounter = 0; answerCounter < question.getAnswers().size(); answerCounter++) {
             AnswerButton answerButton = new AnswerButton(question.getAnswers().get(answerCounter));
             answerPane.add(answerButton, positions.get(answerCounter).getColumnIndex(), positions.get(answerCounter).getRowIndex());
+            answerButton.setMinWidth(170);
 
         }
         activateListener();
