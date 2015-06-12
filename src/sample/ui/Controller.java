@@ -2,13 +2,15 @@ package sample.ui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import sample.business.Question;
 import sample.business.QuestionFactory;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +18,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Controller {
-
 
     static boolean rightAnswer;
     public AnswerPane answerPane = new AnswerPane();
@@ -32,11 +33,13 @@ public class Controller {
     Button audienceJoker = new Button();
     Button restartGame = new Button();
 
-    public void startGame() {  // Startet das Spiel durch Dr�cken des Startbuttons
-        initializeBoard();
-        loadNextQuestion();
-        addJokerButtons();
 
+    public void startGame() {  // Startet das Spiel durch Dr�cken des Startbuttons
+        File source = new File("./start.mp3");
+        Media media = new Media(source.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+        mediaPlayer.setOnEndOfMedia(this::initializeBoard);
     }
 
     public void initializeBoard() {
@@ -48,18 +51,16 @@ public class Controller {
         mainPane.add(jokerPane, 0, 4);
         money = 0;
         questionNumber = 0;
+        loadNextQuestion();
+        addJokerButtons();
     }
 
     public void addRestartButton() {
         mainPane.add(restartGame, 0, 4);
         restartGame.setText("Neues Spiel");
-        restartGame.setOnAction(new EventHandler<javafx.event.ActionEvent>() {
-            @Override
-            public void handle(javafx.event.ActionEvent event) {
-                QuestionFactory.restart();
-                startGame();
-
-            }
+        restartGame.setOnAction(event -> {
+            QuestionFactory.restart();
+            startGame();
         });
     }
 
@@ -127,7 +128,7 @@ public class Controller {
             List<AnswerButton> rightAnswerButton = answerPane.getChildren().stream()
                     .filter(node -> node instanceof AnswerButton)
                     .map(node -> (AnswerButton) node)
-                    .filter(answerButton -> answerButton.hasCorrectAnswer())
+                    .filter(AnswerButton::hasCorrectAnswer)
                     .collect(Collectors.toList());
             currentPercentage = random.nextInt(randomMax) + currentLevelMinPercentage;
             modulo = modulo - currentPercentage;
@@ -155,9 +156,7 @@ public class Controller {
                 wrongAnswerButtons.get(wrongAnswerButtons.size() - 1).setText(wrongAnswerButtons.get(wrongAnswerButtons.size() - 1).getText() + "  (" + 0 + "%)");
             }
             audienceJoker.setDisable(true);
-
         });
-
     }
 
     public void loadNextQuestion() { // Die n�chste Frage wird geladen, Kontostandanzeige wird aktualisiert.
@@ -173,6 +172,14 @@ public class Controller {
         answerPane.setDisable(false);
         answerPane.getChildren().clear();
 
+        try {
+            File source = new File("./newQuestion.mp3");
+            Media media = new Media(source.toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Question question = QuestionFactory.getRandomQuestion(questionNumber);
         questionText.setText(question.getQuestion());
@@ -187,18 +194,10 @@ public class Controller {
         activateListener();
     }
 
-
     ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {   //Dieser Block wird nach anklicken einer Antwort ausgef�hrt.
         @Override
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
             if (rightAnswer) {  // Antwort ist richtig, Kontostand wird aktualisiert, Methode loadNextQuestion wird aufgerufen
-
-                long millisToWait = 1000;
-                long millis = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - millis) < millisToWait) {
-                    // Do nothing
-                }
                 switch (questionNumber) {
                     case 1:
                         money = 50;
@@ -266,11 +265,6 @@ public class Controller {
                 }
 
             } else {  // Wenn die ausgew�hlte Antwort falsch ist, wird das Spiel beendet.
-                long millisToWait = 1000;
-                long millis = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - millis) < millisToWait) {
-                    // Do nothing
-                }
                 mainPane.getChildren().clear();
                 Text text1 = new Text();
                 Text t2 = new Text();
@@ -299,6 +293,4 @@ public class Controller {
     public void removeListener() {
         answerPane.disableProperty().removeListener(listener);
     }
-
-
 }

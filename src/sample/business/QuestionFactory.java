@@ -12,7 +12,7 @@ public final class QuestionFactory {
     static int[] usedQuestions = new int[15];
     static int counter = 0;
     static final List<Question> questions = Arrays.asList(
-            new Question("Frage 1", 1, 1, Arrays.asList(
+            new Question("", 1, 1, Arrays.asList(
                     new Answer("A", false), new Answer("Dies ist richtig", true), new Answer("C", false), new Answer("D", false))),
             new Question("Frage 2", 2, 1, Arrays.asList(
                     new Answer("Richtig", true), new Answer("B", false), new Answer("C", false), new Answer("D", false))),
