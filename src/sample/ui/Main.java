@@ -10,17 +10,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Wer wird Millionär");
         primaryStage.setScene(new Scene(root, 800, 300));
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
-
         launch(args);
     }
 }
