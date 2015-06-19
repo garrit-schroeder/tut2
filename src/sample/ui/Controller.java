@@ -3,7 +3,8 @@ package sample.ui;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -14,7 +15,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Controller {
@@ -45,12 +45,23 @@ public class Controller {
     }
 
     public void initializeBoard() {
+        Image image = new Image(new File("./bild.jpg").toURI().toString());
+
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1205, 574, false, false, false, false));
+
+        Background background = new Background(backgroundImage);
         mainPane.getChildren().clear();
-        mainPane.add(showQuestionNumber, 0, 0);
-        mainPane.add(showMoney, 0, 1);
-        mainPane.add(questionText, 0, 2);
-        mainPane.add(answerPane, 0, 3);
-        mainPane.add(jokerPane, 0, 4);
+        mainPane.setBackground(background);
+
+        GridPane pane = new GridPane();
+        pane.setStyle("-fx-background-color: white");
+        pane.add(showQuestionNumber, 0, 0);
+        pane.add(questionText, 0, 1);
+        pane.add(showMoney, 0, 2);
+
+        mainPane.add(pane, 0, 0);
+        mainPane.add(answerPane, 0, 1);
+        mainPane.add(jokerPane, 0, 2);
         money = 0;
         questionNumber = 0;
         loadNextQuestion();
@@ -61,6 +72,7 @@ public class Controller {
         mainPane.add(restartGame, 0, 4);
         restartGame.setText("Neues Spiel");
         restartGame.setOnAction(event -> {
+            restartGame.setDisable(true);
             QuestionFactory.restart();
             startGame();
         });
@@ -85,12 +97,14 @@ public class Controller {
             mainPane.getChildren().clear();
             Text t = new Text();
             Text t2 = new Text();
-            mainPane.add(t, 0, 1);
-            mainPane.add(t2, 0, 2);
+            GridPane pane = new GridPane();
+            pane.setStyle("-fx-background-color: white");
             t.setText("Spiel beendet!");
             t2.setText("Sie haben " + questionNumber + " Frage(n) gespielt und " + money + " Euro gewonnen!");
+            pane.add(t, 0, 1);
+            pane.add(t2, 0, 2);
+            mainPane.add(pane, 0, 0);
             addRestartButton();
-
         });
 
         fiftyfifty.setOnAction(event -> {
@@ -204,12 +218,15 @@ public class Controller {
                     Text t = new Text();
                     Text t2 = new Text();
                     Text t3 = new Text();
-                    mainPane.add(t, 0, 1);
-                    mainPane.add(t2, 0, 2);
-                    mainPane.add(t3, 0, 3);
+                    GridPane pane = new GridPane();
+                    pane.setStyle("-fx-background-color: white");
                     t.setText("Spiel beendet!");
                     t2.setText("Sie haben alle 15 Fragen richtig beantwortet");
                     t3.setText("und 1.000.000 Euro gewonnen!");
+                    pane.add(t, 0, 1);
+                    pane.add(t2, 0, 2);
+                    pane.add(t3, 0, 3);
+                    mainPane.add(pane, 0, 0);
                     addRestartButton();
 
                 } else {
@@ -220,8 +237,7 @@ public class Controller {
                 mainPane.getChildren().clear();
                 Text text1 = new Text();
                 Text t2 = new Text();
-                mainPane.add(text1, 0, 1);
-                mainPane.add(t2, 0, 2);
+
                 text1.setText("Die Antwort war leider falsch. Spiel beendet!");
                 int prize;
                 if (money >= 16000) {
@@ -233,6 +249,12 @@ public class Controller {
                 }
                 t2.setText("Sie haben " + questionNumber + " Frage(n) gespielt und " + prize + " Euro gewonnen!");
                 addRestartButton();
+
+                GridPane pane = new GridPane();
+                pane.setStyle("-fx-background-color: white");
+                pane.add(text1, 0, 1);
+                pane.add(t2, 0, 2);
+                mainPane.add(pane, 0, 0);
             }
 
         }
