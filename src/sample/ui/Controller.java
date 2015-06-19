@@ -49,7 +49,6 @@ public class Controller {
     }
 
     public void initializeBoard() {
-
         mainPane.getChildren().clear();
         GridPane pane = new GridPane();
         pane.setStyle("-fx-background-color: white");
