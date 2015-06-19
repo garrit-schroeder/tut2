@@ -37,6 +37,10 @@ public class Controller {
 
     public void startGame() {  // Startet das Spiel durch Dr�cken des Startbuttons
         startButton.setDisable(true);
+        Image image = new Image(new File("./bild.jpg").toURI().toString());
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1205, 574, false, false, false, false));
+        Background background = new Background(backgroundImage);
+        mainPane.setBackground(background);
         File source = new File("./start.mp3");
         Media media = new Media(source.toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -45,14 +49,8 @@ public class Controller {
     }
 
     public void initializeBoard() {
-        Image image = new Image(new File("./bild.jpg").toURI().toString());
 
-        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1205, 574, false, false, false, false));
-
-        Background background = new Background(backgroundImage);
         mainPane.getChildren().clear();
-        mainPane.setBackground(background);
-
         GridPane pane = new GridPane();
         pane.setStyle("-fx-background-color: white");
         pane.add(showQuestionNumber, 0, 0);
