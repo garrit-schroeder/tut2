@@ -33,7 +33,7 @@ public class Controller {
     Button stopGame = new Button();
     Button audienceJoker = new Button();
     Button restartGame = new Button();
-
+    private JokerStage jokerStage;
 
     public void startGame() {  // Startet das Spiel durch Dr�cken des Startbuttons
         startButton.setDisable(true);
@@ -52,9 +52,9 @@ public class Controller {
         mainPane.getChildren().clear();
         GridPane pane = new GridPane();
         pane.setStyle("-fx-background-color: white");
-        pane.add(showQuestionNumber, 0, 0);
-        pane.add(questionText, 0, 1);
-        pane.add(showMoney, 0, 2);
+        pane.add(showMoney, 0, 0);
+        pane.add(showQuestionNumber, 0, 1);
+        pane.add(questionText, 0, 2);
 
         mainPane.add(pane, 0, 0);
         mainPane.add(answerPane, 0, 1);
@@ -66,6 +66,7 @@ public class Controller {
     }
 
     public void addRestartButton() {
+        restartGame.setDisable(false);
         mainPane.add(restartGame, 0, 4);
         restartGame.setText("Neues Spiel");
         restartGame.setOnAction(event -> {
@@ -118,7 +119,7 @@ public class Controller {
 
         audienceJoker.setOnAction(event -> {
             audienceJoker.setDisable(true);
-            new JokerStage(answerPane);
+            jokerStage = new JokerStage(answerPane);
         });
     }
 
@@ -160,6 +161,10 @@ public class Controller {
     ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {   //Dieser Block wird nach anklicken einer Antwort ausgef�hrt.
         @Override
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            if (jokerStage != null) {
+                jokerStage.close();
+            }
+
             if (rightAnswer) {  // Antwort ist richtig, Kontostand wird aktualisiert, Methode loadNextQuestion wird aufgerufen
                 switch (questionNumber) {
                     case 1:
