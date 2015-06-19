@@ -84,6 +84,7 @@ public class JokerController {
         series.getData().sort((first, second) -> Collator.getInstance(Locale.GERMANY).compare(((XYChart.Data) first).getXValue(), ((XYChart.Data) second).getXValue()));
 
         bc.getData().add(series);
+        bc.setLegendVisible(false);
     }
 
     public void setAnswerPane(AnswerPane answerPane) {
