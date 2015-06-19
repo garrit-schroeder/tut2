@@ -9,8 +9,10 @@ import sample.business.Answer;
 public class AnswerButton extends Button {
 
     Answer answer;
+    Position position;
 
-    public AnswerButton(final Answer answer) {
+    public AnswerButton(final Answer answer, final Position position) {
+        this.position = position;
         this.answer = answer;
         setText(answer.getText());
         setOnAction(new EventHandler<ActionEvent>() {
@@ -34,4 +36,7 @@ public class AnswerButton extends Button {
         return answer.isCorrect();
     }
 
+    public Position getPosition() {
+        return position;
+    }
 }

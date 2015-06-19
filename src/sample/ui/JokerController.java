@@ -1,16 +1,21 @@
 package sample.ui;
 
+import javafx.collections.ObservableList;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.layout.GridPane;
 import sample.business.QuestionFactory;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.text.Collator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JokerController {
 
     public AnswerPane answerPane;
+    public GridPane jokerPane;
 
     public void createDiagram() {
         Random random = new Random();
@@ -37,14 +42,27 @@ public class JokerController {
             randomMax = 60;
         }
 
-        List<AnswerButton> rightAnswerButton = answerPane.getChildren().stream()
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String, Number> bc = new BarChart<>(xAxis, yAxis);
+        jokerPane.add(bc, 0, 0);
+        bc.setTitle("Publikumsjoker");
+        xAxis.setLabel("Antwort");
+        yAxis.setLabel("Wahrscheinlichkeit");
+
+        XYChart.Series series = new XYChart.Series();
+        series.setName("answers");
+
+
+        AnswerButton rightAnswerButton = answerPane.getChildren().stream()
                 .filter(node -> node instanceof AnswerButton)
                 .map(node -> (AnswerButton) node)
                 .filter(AnswerButton::hasCorrectAnswer)
-                .collect(Collectors.toList());
+                .findFirst().get();
         currentPercentage = random.nextInt(randomMax) + currentLevelMinPercentage;
         modulo = modulo - currentPercentage;
-        rightAnswerButton.get(0).setText(rightAnswerButton.get(0).getText() + "  (" + currentPercentage + "%)");
+
+        series.getData().add(new XYChart.Data(rightAnswerButton.getPosition().name(), currentPercentage));
 
         List<AnswerButton> wrongAnswerButtons = answerPane.getChildren().stream()
                 .filter(node -> node instanceof AnswerButton)
@@ -53,20 +71,19 @@ public class JokerController {
                 .collect(Collectors.toList());
         Collections.shuffle(wrongAnswerButtons);
 
-        for (int i = 0; i < wrongAnswerButtons.size() - 1; i++) {
+        for (AnswerButton wrongAnswerButton : wrongAnswerButtons) {
             if (modulo != 0) {
                 currentPercentage = random.nextInt(modulo) + 1;
                 modulo = modulo - currentPercentage;
-                wrongAnswerButtons.get(i).setText(wrongAnswerButtons.get(i).getText() + "  (" + currentPercentage + "%)");
+                series.getData().add(new XYChart.Data(wrongAnswerButton.getPosition().name(), currentPercentage));
             } else {
-                wrongAnswerButtons.get(i).setText(wrongAnswerButtons.get(i).getText() + "  (0%");
+                series.getData().add(new XYChart.Data(wrongAnswerButton.getPosition().name(), 0));
             }
         }
-        if (modulo != 0) {
-            wrongAnswerButtons.get(wrongAnswerButtons.size() - 1).setText(wrongAnswerButtons.get(wrongAnswerButtons.size() - 1).getText() + "  (" + modulo + "%)");
-        } else {
-            wrongAnswerButtons.get(wrongAnswerButtons.size() - 1).setText(wrongAnswerButtons.get(wrongAnswerButtons.size() - 1).getText() + "  (" + 0 + "%)");
-        }
+
+        series.getData().sort((first, second) -> Collator.getInstance(Locale.GERMANY).compare(((XYChart.Data) first).getXValue(), ((XYChart.Data) second).getXValue()));
+
+        bc.getData().add(series);
     }
 
     public void setAnswerPane(AnswerPane answerPane) {

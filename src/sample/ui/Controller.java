@@ -139,10 +139,9 @@ public class Controller {
         List<Position> positions = Arrays.asList(Position.values());
         Collections.shuffle(positions);
         for (int answerCounter = 0; answerCounter < question.getAnswers().size(); answerCounter++) {
-            AnswerButton answerButton = new AnswerButton(question.getAnswers().get(answerCounter));
+            AnswerButton answerButton = new AnswerButton(question.getAnswers().get(answerCounter), positions.get(answerCounter));
             answerPane.add(answerButton, positions.get(answerCounter).getColumnIndex(), positions.get(answerCounter).getRowIndex());
             answerButton.setMinWidth(170);
-
         }
         activateListener();
     }

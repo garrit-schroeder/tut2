@@ -2,7 +2,7 @@ package sample.ui;
 
 public enum Position {
 
-    A(0, 0), B(0, 1), C(1, 0), D(1, 1);
+    A(0, 0), B(1, 0), C(0, 1), D(1, 1);
 
     private int columnIndex;
     private int rowIndex;
